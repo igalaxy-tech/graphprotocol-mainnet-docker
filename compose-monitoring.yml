@@ -10,6 +10,9 @@ x-logging:
 networks:
   monitor-net:
     driver: bridge
+  graph-proxy:
+    driver: bridge
+    external: true
 
 volumes:
     prometheus_data: {}
@@ -23,75 +26,11 @@ services:
 
 
 ######################################################################################
-#####################          NGINX PROXY CONTAINER           #######################
-######################################################################################
-
-
-
-  nginx-proxy:
-    image: jwilder/nginx-proxy
-    container_name: nginx-proxy
-    depends_on:
-      - grafana
-    #environment:
-    #  PROMETHEUS_HOST: ${PROMETHEUS_HOST}
-    #  HTTP_AUTH_LOGIN: ${HTTP_AUTH_USER}
-    #  HTTP_AUTH_PASSWORD: ${HTTP_AUTH_PASSWORD}
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - /var/run/docker.sock:/tmp/docker.sock:ro
-      - nginx_certs:/etc/nginx/certs
-      - nginx_vhost:/etc/nginx/vhost.d
-      - nginx_html:/usr/share/nginx/html
-    #  - ./nginx-proxy/htpasswd:/etc/nginx/htpasswd
-      - ./nginx-proxy/nginx.conf:/etc/nginx/nginx.conf:ro
-    networks:
-      - monitor-net
-    restart: unless-stopped
-    logging: *default-logging
-
-
-######################################################################################
-#####################            NGINX SSL CONTAINER           #######################
-######################################################################################
-
-
-  nginx-ssl:
-    image: jrcs/letsencrypt-nginx-proxy-companion
-    container_name: nginx-ssl
-    depends_on:
-      - grafana
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - nginx_certs:/etc/nginx/certs
-      - nginx_vhost:/etc/nginx/vhost.d
-      - nginx_html:/usr/share/nginx/html
-      - nginx_acme:/etc/acme.sh
-    #  - ./nginx-proxy/htpasswd:/etc/nginx/htpasswd
-      - ./nginx-proxy/nginx.conf:/etc/nginx/nginx.conf:ro
-    restart: unless-stopped
-    networks:
-      - monitor-net
-    restart: unless-stopped
-    environment:
-      NGINX_PROXY_CONTAINER: nginx-proxy
-      DEFAULT_EMAIL: ${EMAIL}
-    logging: *default-logging
-
-
-
-
-######################################################################################
 #####################          PROMETHEUS CONTAINER            #######################
 ######################################################################################
 
-
-
   prometheus:
     image: prom/prometheus
-    container_name: prometheus
     #environment:
     #  VIRTUAL_HOST: ${PROMETHEUS_HOST}
     #  VIRTUAL_PORT: 9090
@@ -110,22 +49,19 @@ services:
     expose:
       - 9090
     networks:
+    #  - graph-proxy
       - monitor-net
     labels:
       org.label-schema.group: "monitoring"
     logging: *default-logging
 
 
-
 ######################################################################################
 #####################          ALERT MANAGER CONTAINER         #######################
 ######################################################################################
 
-
-
   alertmanager:
     image: prom/alertmanager
-    container_name: alertmanager
     volumes:
       - ./alertmanager:/etc/alertmanager
     command:
@@ -141,16 +77,12 @@ services:
     logging: *default-logging
 
 
-
 ######################################################################################
 #####################         NODE EXPORTER CONTAINER          #######################
 ######################################################################################
 
-
-
   nodeexporter:
     image: prom/node-exporter
-    container_name: nodeexporter
     volumes:
       - /proc:/host/proc:ro
       - /sys:/host/sys:ro
@@ -170,16 +102,12 @@ services:
     logging: *default-logging
 
 
-
 ######################################################################################
 #####################             CADVISOR CONTAINER           #######################
 ######################################################################################
 
-
-
   cadvisor:
     image: gcr.io/cadvisor/cadvisor
-    container_name: cadvisor
     volumes:
       - /:/rootfs:ro
       - /var/run:/var/run:rw
@@ -196,16 +124,13 @@ services:
     logging: *default-logging
 
 
-
 ######################################################################################
 #####################           GRAFANA CONTAINER              #######################
 ######################################################################################
 
 
-
   grafana:
     image: grafana/grafana
-    container_name: grafana
     volumes:
       - grafana_data:/var/lib/grafana
       - ./grafana/provisioning:/etc/grafana/provisioning
@@ -227,22 +152,19 @@ services:
     expose:
       - 3000
     networks:
+      - graph-proxy
       - monitor-net
     labels:
       org.label-schema.group: "monitoring"
     logging: *default-logging
-
-
 
 ######################################################################################
 #####################          PUSHGATEWAY CONTAINER           #######################
 ######################################################################################
 
 
-
   pushgateway:
     image: prom/pushgateway
-    container_name: pushgateway
     restart: unless-stopped
     expose:
       - 9091

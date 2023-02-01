@@ -1,1 +1,2 @@
-docker-compose -f compose-optional.yml down $@
+docker-compose -f compose-optional.yml -f compose-nginx.yml down $@
+docker network rm graph-proxy || true

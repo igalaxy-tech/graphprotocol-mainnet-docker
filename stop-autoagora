@@ -1,1 +1,2 @@
-docker-compose -f compose-autoagora.yml down $@
+docker-compose -f compose-autoagora.yml -f compose-nginx.yml down $@
+docker network rm graph-proxy || true

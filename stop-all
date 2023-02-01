@@ -1,1 +1,2 @@
-docker-compose -f compose-all-services.yml down $@
+docker-compose -f compose-all-services.yml -f compose-nginx.yml down $@
+docker network rm graph-proxy || true
