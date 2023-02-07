@@ -30,8 +30,6 @@ services:
   nginx-proxy:
     image: jwilder/nginx-proxy
     container_name: nginx-proxy
-    depends_on:
-      - indexer-agent-gui
     #environment:
     #  PROMETHEUS_HOST: ${PROMETHEUS_HOST}
     #  HTTP_AUTH_LOGIN: ${HTTP_AUTH_USER}
@@ -59,8 +57,6 @@ services:
   nginx-ssl:
     image: jrcs/letsencrypt-nginx-proxy-companion
     container_name: nginx-ssl
-    depends_on:
-      - indexer-agent-gui
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - nginx_certs:/etc/nginx/certs
