@@ -30,7 +30,7 @@ services:
   poifier:
     image: grassets/poifier-client:v2.0.3
     command:
-      - '--poifier-server=${POIFIER_SERVER}
+      - '--poifier-server=${POIFIER_SERVER}'
       - '--graph-node-status-endpoint=http://index-node-0:8030/graphql'
       - '--mnemonic=${OPERATOR_SEED_PHRASE}'
       - '--indexer-address=${STAKING_WALLET_ADDRESS}'
