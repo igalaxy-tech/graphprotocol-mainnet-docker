@@ -71,7 +71,7 @@ services:
 ######################################################################################
 
   indexer-service:
-    image: ${INDEXER_SERVICE_VERSION:-kwetlesen/autoagora-indexer-service:latest}
+    image: ${INDEXER_SERVICE_VERSION:-ghcr.io/semiotic-ai/autoagora-indexer-service:v0.1.2-v0.20.11}
     depends_on:
       - index-node-0
       - query-node-0
@@ -206,7 +206,7 @@ services:
 ######################################################################################
 
   indexer-agent:
-    image: ${INDEXER_AGENT_VERSION:-ghcr.io/graphprotocol/indexer-agent:v0.20.8}
+    image: ${INDEXER_AGENT_VERSION:-ghcr.io/graphprotocol/indexer-agent:v0.20.11}
     depends_on:
       - index-node-0
       - query-node-0
@@ -284,7 +284,7 @@ services:
 ######################################################################################
 
   index-node-0:
-    image: ${GRAPH_NODE_VERSION:-graphprotocol/graph-node:v0.29.0}
+    image: ${GRAPH_NODE_VERSION:-graphprotocol/graph-node:v0.30.0}
     depends_on:
       - postgres
       - postgres2
@@ -327,7 +327,7 @@ services:
 ######################################################################################
 
   query-node-0:
-    image: ${GRAPH_NODE_VERSION:-graphprotocol/graph-node:v0.29.0}
+    image: ${GRAPH_NODE_VERSION:-graphprotocol/graph-node:v0.30.0}
     depends_on:
       - postgres
       - postgres2
@@ -405,6 +405,7 @@ services:
       POSTGRES_USER: ${DB_USER:-graph-node}
       POSTGRES_PASSWORD: ${DB_PASS:-db-password}
       POSTGRES_DB: ${AGENT_DB_NAME:-indexer-agent}
+      POSTGRES_INITDB_ARGS: "-E UTF8 --locale=C"
     volumes:
       - postgres2_data:/var/lib/postgresql/data
     networks:
