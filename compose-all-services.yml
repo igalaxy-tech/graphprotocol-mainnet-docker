@@ -53,7 +53,7 @@ services:
 ######################################################################################
 
   poifier:
-    image: grassets/poifier-client:v2.0.2
+    image: grassets/poifier-client:v2.0.3
     command:
       - '--poifier-server=${POIFIER_SERVER}'
       - '--graph-node-status-endpoint=http://index-node-0:8030/graphql'
