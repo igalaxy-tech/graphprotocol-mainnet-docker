@@ -71,7 +71,7 @@ services:
 ######################################################################################
 
   indexer-service:
-    image: ${INDEXER_SERVICE_VERSION:-ghcr.io/semiotic-ai/autoagora-indexer-service:v0.1.2-v0.20.11}
+    image: ${INDEXER_SERVICE_VERSION:-ghcr.io/semiotic-ai/autoagora-indexer-service:v0.1.2-v0.20.16}
     depends_on:
       - index-node-0
       - query-node-0
@@ -206,7 +206,7 @@ services:
 ######################################################################################
 
   indexer-agent:
-    image: ${INDEXER_AGENT_VERSION:-ghcr.io/graphprotocol/indexer-agent:v0.20.11}
+    image: ${INDEXER_AGENT_VERSION:-ghcr.io/graphprotocol/indexer-agent:v0.20.16}
     depends_on:
       - index-node-0
       - query-node-0
@@ -244,7 +244,7 @@ services:
       INDEXER_AGENT_DAI_CONTRACT: ${INDEXER_AGENT_DAI_CONTRACT:-"0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"}
       INDEXER_AGENT_COLLECT_RECEIPTS_ENDPOINT: ${INDEXER_AGENT_COLLECT_RECEIPTS_ENDPOINT:-https://gateway.thegraph.com/collect-receipts}
       INDEXER_AGENT_OFFCHAIN_SUBGRAPHS: ${INDEXER_AGENT_OFFCHAIN_SUBGRAPHS}
-      INDEXER_AGENT_GAS_PRICE_MAX: ${INDEXER_AGENT_GAS_PRICE_MAX:-50}
+      INDEXER_AGENT_BASE_FEE_PER_GAS_MAX: ${INDEXER_AGENT_BASE_FEE_PER_GAS_MAX:-50}
     networks:
       - monitor-net
     restart: unless-stopped
